@@ -10,9 +10,9 @@ import SwiftUI
 
 struct VisualEffect: NSViewRepresentable {
     func makeNSView(context: Self.Context) -> NSView {
-        let test = NSVisualEffectView()
-        test.state = NSVisualEffectView.State.active
-        return test
+        let effect = NSVisualEffectView()
+        effect.state = NSVisualEffectView.State.active
+        return effect
     }
     func updateNSView(_ nsView: NSView, context: Context) { }
 }
