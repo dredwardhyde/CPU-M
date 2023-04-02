@@ -11,9 +11,6 @@
 		4B7897E829D9863200109C6B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7897E729D9863200109C6B /* ContentView.swift */; };
 		4B7897EA29D9863200109C6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7897E929D9863200109C6B /* Assets.xcassets */; };
 		4B7897ED29D9863200109C6B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7897EC29D9863200109C6B /* Preview Assets.xcassets */; };
-		4B7897F829D9863300109C6B /* CPU_MTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7897F729D9863300109C6B /* CPU_MTests.swift */; };
-		4B78980229D9863300109C6B /* CPU_MUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B78980129D9863300109C6B /* CPU_MUITests.swift */; };
-		4B78980429D9863300109C6B /* CPU_MUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B78980329D9863300109C6B /* CPU_MUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,10 +38,7 @@
 		4B7897EC29D9863200109C6B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4B7897EE29D9863200109C6B /* CPU_M.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CPU_M.entitlements; sourceTree = "<group>"; };
 		4B7897F329D9863300109C6B /* CPU-MTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CPU-MTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B7897F729D9863300109C6B /* CPU_MTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU_MTests.swift; sourceTree = "<group>"; };
 		4B7897FD29D9863300109C6B /* CPU-MUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CPU-MUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B78980129D9863300109C6B /* CPU_MUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU_MUITests.swift; sourceTree = "<group>"; };
-		4B78980329D9863300109C6B /* CPU_MUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU_MUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +70,6 @@
 			isa = PBXGroup;
 			children = (
 				4B7897E429D9863200109C6B /* CPU-M */,
-				4B7897F629D9863300109C6B /* CPU-MTests */,
-				4B78980029D9863300109C6B /* CPU-MUITests */,
 				4B7897E329D9863200109C6B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -110,23 +102,6 @@
 				4B7897EC29D9863200109C6B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		4B7897F629D9863300109C6B /* CPU-MTests */ = {
-			isa = PBXGroup;
-			children = (
-				4B7897F729D9863300109C6B /* CPU_MTests.swift */,
-			);
-			path = "CPU-MTests";
-			sourceTree = "<group>";
-		};
-		4B78980029D9863300109C6B /* CPU-MUITests */ = {
-			isa = PBXGroup;
-			children = (
-				4B78980129D9863300109C6B /* CPU_MUITests.swift */,
-				4B78980329D9863300109C6B /* CPU_MUITestsLaunchTests.swift */,
-			);
-			path = "CPU-MUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,7 +243,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B7897F829D9863300109C6B /* CPU_MTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,8 +250,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B78980229D9863300109C6B /* CPU_MUITests.swift in Sources */,
-				4B78980429D9863300109C6B /* CPU_MUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
