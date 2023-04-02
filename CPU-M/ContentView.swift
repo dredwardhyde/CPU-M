@@ -1,12 +1,13 @@
 import SwiftUI
+import IOKit
 
 extension Process {
-    static func stringFromSysctl(command: String) -> String {
+    static func stringFromTerminal(baseCommand: String, command: String) -> String {
         let task = Process()
         let pipe = Pipe()
         task.standardOutput = pipe
         task.launchPath = "/bin/bash"
-        task.arguments = ["-c", "sysctl -n " + command]
+        task.arguments = ["-c", baseCommand + command]
         task.launch()
         var decodedString = ""
         if let decodedData = Data(base64Encoded: pipe.fileHandleForReading.availableData.base64EncodedString()) {
@@ -15,43 +16,38 @@ extension Process {
         return decodedString.trimmingCharacters(in: CharacterSet.newlines)
     }
     
-    static func stringFromSwVers(command: String) -> String {
-        let task = Process()
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.launchPath = "/bin/bash"
-        task.arguments = ["-c", "sw_vers -" + command]
-        task.launch()
-        var decodedString = ""
-        if let decodedData = Data(base64Encoded: pipe.fileHandleForReading.availableData.base64EncodedString()) {
-            decodedString = String(data: decodedData, encoding: .utf8)!
+    static let processor = stringFromTerminal(baseCommand: "sysctl -n ", command: "machdep.cpu.brand_string")
+    static let hostname = stringFromTerminal(baseCommand: "sysctl -n ", command: "kern.hostname")
+    static let os_build = stringFromTerminal(baseCommand: "sysctl -n ", command: "kern.osversion")
+    static let total_memory = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.memsize")
+    
+    static let cores_level1_name = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel1.name")
+    static let cores_level1_count = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel1.physicalcpu")
+    static let cores_level1_l1icache = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel1.l1icachesize")
+    static let cores_level1_l1dcache = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel1.l1dcachesize")
+    static let cores_per_l2_level1 = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel1.cpusperl2")
+    static let l2_cache_size_level1 = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel1.l2cachesize")
+    
+    static let cores_level0_name = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel0.name")
+    static let cores_level0_count = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel0.physicalcpu")
+    static let cores_level0_l1icache = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel0.l1icachesize")
+    static let cores_level0_l1dcache = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel0.l1dcachesize")
+    static let cores_per_l2_level0 = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel0.cpusperl2")
+    static let l2_cache_size_level0 = stringFromTerminal(baseCommand: "sysctl -n ", command: "hw.perflevel0.l2cachesize")
+    
+    static let os_name = stringFromTerminal(baseCommand: "sw_vers -", command: "productName")
+    static let os_version = stringFromTerminal(baseCommand: "sw_vers -", command: "productVersion")
+    
+    static func getGPUCoreCount() -> String {
+        let rawData = Process.stringFromTerminal(baseCommand: "ioreg -l | ", command: "grep gpu-core-count")
+        if let firstIndex = rawData.firstIndex(of: "=") {
+            return String(rawData[firstIndex...].dropFirst(2))
         }
-        return decodedString.trimmingCharacters(in: CharacterSet.newlines)
+        else {
+           return rawData
+        }
     }
-    
-    static let processor = stringFromSysctl(command: "machdep.cpu.brand_string")
-    static let hostname = stringFromSysctl(command: "kern.hostname")
-    static let os_build = stringFromSysctl(command: "kern.osversion")
-    static let total_memory = stringFromSysctl(command: "hw.memsize")
-    
-    static let cores_level1_name = stringFromSysctl(command: "hw.perflevel1.name")
-    static let cores_level1_count = stringFromSysctl(command: "hw.perflevel1.physicalcpu")
-    static let cores_level1_l1icache = stringFromSysctl(command: "hw.perflevel1.l1icachesize")
-    static let cores_level1_l1dcache = stringFromSysctl(command: "hw.perflevel1.l1dcachesize")
-    static let cores_per_l2_level1 = stringFromSysctl(command: "hw.perflevel1.cpusperl2")
-    static let l2_cache_size_level1 = stringFromSysctl(command: "hw.perflevel1.l2cachesize")
-    
-    static let cores_level0_name = stringFromSysctl(command: "hw.perflevel0.name")
-    static let cores_level0_count = stringFromSysctl(command: "hw.perflevel0.physicalcpu")
-    static let cores_level0_l1icache = stringFromSysctl(command: "hw.perflevel0.l1icachesize")
-    static let cores_level0_l1dcache = stringFromSysctl(command: "hw.perflevel0.l1dcachesize")
-    static let cores_per_l2_level0 = stringFromSysctl(command: "hw.perflevel0.cpusperl2")
-    static let l2_cache_size_level0 = stringFromSysctl(command: "hw.perflevel0.l2cachesize")
-    
-    static let os_name = stringFromSwVers(command: "productName")
-    static let os_version = stringFromSwVers(command: "productVersion")
 }
-
 
 struct VisualEffectView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSVisualEffectView {
@@ -135,14 +131,50 @@ struct ContentView: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Processor")
+                    Text("Chip")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.processor)
                         .frame(width: 100, alignment: .leading)
                         .foregroundColor(.gray)
                 }
+                HStack{
+                    Text("L3 Universal")
+                        .font(.headline)
+                        .frame(width: 150, alignment: .leading)
+                    Text(Process.cores_per_l2_level1 + " x " + convertToMbString(source: Process.l2_cache_size_level1))
+                        .frame(width: 100, alignment: .leading)
+                        .foregroundColor(.gray)
+                }
+            }.padding(.bottom, 5)
+            
+            VStack(alignment: .center) {
+                HStack {
+                    Text("GPU")
+                        .font(.headline)
+                        .frame(width: 150, alignment: .center)
+                }
+            }.padding(.bottom, 5)
+            
+            VStack(alignment: .leading) {
+                HStack(spacing: 10) {
+                    Text("Graphic cores")
+                        .font(.headline)
+                        .lineLimit(2)
+                        .frame(width: 150, alignment: .leading)
+                    Text(Process.getGPUCoreCount())
+                        .frame(width: 100, alignment: .leading)
+                        .foregroundColor(.gray)
+                }
             }.padding(.bottom, 10)
+            
+            VStack(alignment: .center) {
+                HStack {
+                    Text("CPU")
+                        .font(.headline)
+                        .frame(width: 150, alignment: .center)
+                }
+            }.padding(.bottom, 5)
             
             VStack(alignment: .leading) {
                 HStack(spacing: 10) {
@@ -221,7 +253,7 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(minWidth: 270, maxWidth: 270, minHeight: 350, maxHeight: 350, alignment:.top)
+        .frame(minWidth: 270, maxWidth: 270, minHeight: 450, maxHeight: 450, alignment:.top)
         .fixedSize()
         .background(VisualEffectView().ignoresSafeArea())
     }
