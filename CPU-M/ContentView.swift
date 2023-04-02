@@ -52,11 +52,9 @@ extension Process {
 struct VisualEffectView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
-        
         view.blendingMode = .behindWindow
         view.state = .active
-        view.material = .underWindowBackground
-        
+        view.material = .hudWindow
         return view
     }
     
@@ -139,7 +137,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
                 HStack{
-                    Text("L3 Universal")
+                    Text("System level cache")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.cores_per_l2_level1 + " x " + convertToMbString(source: Process.l2_cache_size_level1))
