@@ -46,6 +46,16 @@ extension Process {
             return rawData
         }
     }
+    
+    static func getMemoryInfo(param: String) -> String {
+        let rawData = Process.stringFromTerminal(baseCommand: "system_profiler SPMemoryDataType | ", command: "grep " + param)
+        if let firstIndex = rawData.firstIndex(of: ":") {
+            return String(rawData[firstIndex...].dropFirst(2))
+        }
+        else {
+            return rawData
+        }
+    }
 }
 
 struct VisualEffectView: NSViewRepresentable {
@@ -116,17 +126,51 @@ struct ContentView: View {
                         .frame(width: 100, alignment: .leading)
                         .foregroundColor(.gray)
                 }
+            }.padding(.bottom, 5)
+            
+            VStack(alignment: .center) {
                 HStack {
-                    Text("Total memory")
+                    Text("Memory")
+                        .font(.headline)
+                        .frame(width: 150, alignment: .center)
+                }
+            }.padding(.bottom, 5)
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Total")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(convertToGbString(source: Process.total_memory))
                         .frame(width: 100, alignment: .leading)
                         .foregroundColor(.gray)
                 }
-            }.padding(.bottom, 10)
+                HStack {
+                    Text("Type")
+                        .font(.headline)
+                        .frame(width: 150, alignment: .leading)
+                    Text(Process.getMemoryInfo(param: "Type"))
+                        .frame(width: 100, alignment: .leading)
+                        .foregroundColor(.gray)
+                }
+                HStack {
+                    Text("Manufacturer")
+                        .font(.headline)
+                        .frame(width: 150, alignment: .leading)
+                    Text(Process.getMemoryInfo(param: "Manufacturer"))
+                        .frame(width: 100, alignment: .leading)
+                        .foregroundColor(.gray)
+                }
+            }.padding(.bottom, 5)
             
-            VStack(alignment: .leading) {
+            VStack {
+                VStack(alignment: .center) {
+                    HStack {
+                        Text("Processor")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .center)
+                    }
+                }.padding(.bottom, 5)
                 HStack {
                     Text("Chip")
                         .font(.headline)
@@ -136,113 +180,114 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
             }.padding(.bottom, 5)
-            
-            VStack(alignment: .center) {
-                HStack {
-                    Text("GPU")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .center)
-                }
-            }.padding(.bottom, 5)
-            
-            VStack(alignment: .leading) {
-                HStack(spacing: 10) {
-                    Text("Graphic cores")
-                        .font(.headline)
-                        .lineLimit(2)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.getGPUCoreCount())
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-            }.padding(.bottom, 10)
-            
-            VStack(alignment: .center) {
-                HStack {
-                    Text("CPU")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .center)
-                }
-            }.padding(.bottom, 5)
-            
-            VStack(alignment: .leading) {
-                HStack(spacing: 10) {
-                    Text(Process.cores_level1_name + " cores")
-                        .font(.headline)
-                        .lineLimit(2)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_level1_count)
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-            }.padding(.bottom, 10)
-            
-            VStack(alignment: .leading)  {
+            VStack {
+                VStack(alignment: .center) {
+                    HStack {
+                        Text("GPU")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .center)
+                    }
+                }.padding(.bottom, 5)
                 
-                HStack{
-                    Text("L1 Data")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_level1_count + " x " + convertToKbString(source: Process.cores_level1_l1dcache))
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-                HStack{
-                    Text("L1 Instruction")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_level1_count + " x " + convertToKbString(source: Process.cores_level1_l1icache))
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-                HStack{
-                    Text("L2 Universal")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_per_l2_level1 + " x " + convertToMbString(source: Process.l2_cache_size_level1))
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-            }.padding(.bottom, 10)
-            
-            VStack(alignment: .leading) {
-                HStack(spacing: 10) {
-                    Text(Process.cores_level0_name + " cores")
-                        .font(.headline)
-                        .lineLimit(2)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_level0_count)
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-            }.padding(.bottom, 10)
-            
-            VStack(alignment: .leading)  {
-                HStack(spacing: 10) {
-                    Text("L1 Data")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_level0_count + " x " + convertToKbString(source: Process.cores_level0_l1dcache)).foregroundColor(.gray)
-                }
-                HStack(spacing: 10) {
-                    Text("L1 Instruction")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_level0_count + " x " + convertToKbString(source: Process.cores_level0_l1icache))
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-                HStack(spacing: 10) {
-                    Text("L2 Universal")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(getL2NumberOfClusters() + " x " + convertToMbString(source: Process.l2_cache_size_level0))
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
+                VStack(alignment: .leading) {
+                    HStack(spacing: 10) {
+                        Text("Graphic cores")
+                            .font(.headline)
+                            .lineLimit(2)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.getGPUCoreCount())
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                }.padding(.bottom, 5)
+                
+                VStack(alignment: .center) {
+                    HStack {
+                        Text("CPU")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .center)
+                    }
+                }.padding(.bottom, 5)
+                
+                VStack(alignment: .leading) {
+                    HStack(spacing: 10) {
+                        Text(Process.cores_level1_name + " cores")
+                            .font(.headline)
+                            .lineLimit(2)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_level1_count)
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                }.padding(.bottom, 5)
+                
+                VStack(alignment: .leading)  {
+                    
+                    HStack{
+                        Text("L1 Data")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_level1_count + " x " + convertToKbString(source: Process.cores_level1_l1dcache))
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                    HStack{
+                        Text("L1 Instruction")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_level1_count + " x " + convertToKbString(source: Process.cores_level1_l1icache))
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                    HStack{
+                        Text("L2 Universal")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_per_l2_level1 + " x " + convertToMbString(source: Process.l2_cache_size_level1))
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                }.padding(.bottom, 5)
+                
+                VStack(alignment: .leading) {
+                    HStack(spacing: 10) {
+                        Text(Process.cores_level0_name + " cores")
+                            .font(.headline)
+                            .lineLimit(2)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_level0_count)
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                }.padding(.bottom, 5)
+                
+                VStack(alignment: .leading)  {
+                    HStack(spacing: 10) {
+                        Text("L1 Data")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_level0_count + " x " + convertToKbString(source: Process.cores_level0_l1dcache)).foregroundColor(.gray)
+                    }
+                    HStack(spacing: 10) {
+                        Text("L1 Instruction")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.cores_level0_count + " x " + convertToKbString(source: Process.cores_level0_l1icache))
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                    HStack(spacing: 10) {
+                        Text("L2 Universal")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(getL2NumberOfClusters() + " x " + convertToMbString(source: Process.l2_cache_size_level0))
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
                 }
             }
         }
-        .frame(minWidth: 270, maxWidth: 270, minHeight: 410, maxHeight: 410, alignment:.top)
+        .frame(minWidth: 270, maxWidth: 270, minHeight: 480, maxHeight: 480, alignment:.top)
         .fixedSize()
         .background(VisualEffectView().ignoresSafeArea())
     }
