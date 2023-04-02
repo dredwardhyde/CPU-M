@@ -89,9 +89,9 @@ struct ContentView: View {
         
         VStack {
             VStack {
-                Text("CPU-M")
+                Text("System information")
                     .font(.headline)
-                    .padding(.top, 6).ignoresSafeArea()
+                    .padding(.top, 6)
             }.padding(.horizontal, 10)
             
             VStack(alignment: .leading) {
@@ -133,14 +133,6 @@ struct ContentView: View {
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.processor)
-                        .frame(width: 100, alignment: .leading)
-                        .foregroundColor(.gray)
-                }
-                HStack{
-                    Text("System level cache")
-                        .font(.headline)
-                        .frame(width: 150, alignment: .leading)
-                    Text(Process.cores_per_l2_level1 + " x " + convertToMbString(source: Process.l2_cache_size_level1))
                         .frame(width: 100, alignment: .leading)
                         .foregroundColor(.gray)
                 }
@@ -251,7 +243,7 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(minWidth: 270, maxWidth: 270, minHeight: 450, maxHeight: 450, alignment:.top)
+        .frame(minWidth: 270, maxWidth: 270, minHeight: 410, maxHeight: 410, alignment:.top)
         .fixedSize()
         .background(VisualEffectView().ignoresSafeArea())
     }
