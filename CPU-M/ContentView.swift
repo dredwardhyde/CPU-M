@@ -1,5 +1,4 @@
 import SwiftUI
-import IOKit
 
 extension Process {
     static func stringFromTerminal(baseCommand: String, command: String) -> String {
@@ -44,7 +43,7 @@ extension Process {
             return String(rawData[firstIndex...].dropFirst(2))
         }
         else {
-           return rawData
+            return rawData
         }
     }
 }
@@ -205,7 +204,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
             }.padding(.bottom, 10)
-                
+            
             VStack(alignment: .leading) {
                 HStack(spacing: 10) {
                     Text(Process.cores_level0_name + " cores")
