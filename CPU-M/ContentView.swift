@@ -158,9 +158,8 @@ struct ContentView: View {
             
             VStack(alignment: .leading)  {
                 
-                
                 HStack{
-                    Text("L1d")
+                    Text("L1 Data")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.cores_level1_count + " x " + convertToKbString(source: Process.cores_level1_l1dcache))
@@ -168,7 +167,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
                 HStack{
-                    Text("L1i")
+                    Text("L1 Instruction")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.cores_level1_count + " x " + convertToKbString(source: Process.cores_level1_l1icache))
@@ -176,7 +175,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
                 HStack{
-                    Text("L2")
+                    Text("L2 Universal")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.cores_per_l2_level1 + " x " + convertToMbString(source: Process.l2_cache_size_level1))
@@ -199,13 +198,13 @@ struct ContentView: View {
             
             VStack(alignment: .leading)  {
                 HStack(spacing: 10) {
-                    Text("L1d")
+                    Text("L1 Data")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.cores_level0_count + " x " + convertToKbString(source: Process.cores_level0_l1dcache)).foregroundColor(.gray)
                 }
                 HStack(spacing: 10) {
-                    Text("L1i")
+                    Text("L1 Instruction")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(Process.cores_level0_count + " x " + convertToKbString(source: Process.cores_level0_l1icache))
@@ -213,7 +212,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 }
                 HStack(spacing: 10) {
-                    Text("L2")
+                    Text("L2 Universal")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
                     Text(getL2NumberOfClusters() + " x " + convertToMbString(source: Process.l2_cache_size_level0))
