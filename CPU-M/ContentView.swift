@@ -36,9 +36,9 @@ extension Process {
     
     static let os_name = stringFromTerminal(baseCommand: "sw_vers -", command: "productName")
     static let os_version = stringFromTerminal(baseCommand: "sw_vers -", command: "productVersion")
-    
-    static func getGPUCoreCount() -> String {
-        let rawData = Process.stringFromTerminal(baseCommand: "ioreg -l | ", command: "grep gpu-core-count")
+        
+    static func getIORegData(param: String) -> String {
+        let rawData = Process.stringFromTerminal(baseCommand: "ioreg -l -w0 | ", command: "grep " + param)
         if let firstIndex = rawData.firstIndex(of: "=") {
             return String(rawData[firstIndex...].dropFirst(2))
         }
@@ -47,8 +47,8 @@ extension Process {
         }
     }
     
-    static func getMemoryInfo(param: String) -> String {
-        let rawData = Process.stringFromTerminal(baseCommand: "system_profiler SPMemoryDataType | ", command: "grep " + param)
+    static func getSysProfilerData(base: String, param: String) -> String {
+        let rawData = Process.stringFromTerminal(baseCommand: "system_profiler " + base + " | ", command: "grep " + param)
         if let firstIndex = rawData.firstIndex(of: ":") {
             return String(rawData[firstIndex...].dropFirst(2))
         }
@@ -149,7 +149,7 @@ struct ContentView: View {
                     Text("Type")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
-                    Text(Process.getMemoryInfo(param: "Type"))
+                    Text(Process.getSysProfilerData(base: "SPMemoryDataType", param: "Type"))
                         .frame(width: 100, alignment: .leading)
                         .foregroundColor(.gray)
                 }
@@ -157,7 +157,7 @@ struct ContentView: View {
                     Text("Manufacturer")
                         .font(.headline)
                         .frame(width: 150, alignment: .leading)
-                    Text(Process.getMemoryInfo(param: "Manufacturer"))
+                    Text(Process.getSysProfilerData(base: "SPMemoryDataType", param: "Manufacturer"))
                         .frame(width: 100, alignment: .leading)
                         .foregroundColor(.gray)
                 }
@@ -195,7 +195,7 @@ struct ContentView: View {
                             .font(.headline)
                             .lineLimit(2)
                             .frame(width: 150, alignment: .leading)
-                        Text(Process.getGPUCoreCount())
+                        Text(Process.getIORegData(param: "gpu-core-count"))
                             .frame(width: 100, alignment: .leading)
                             .foregroundColor(.gray)
                     }
@@ -284,10 +284,54 @@ struct ContentView: View {
                             .frame(width: 100, alignment: .leading)
                             .foregroundColor(.gray)
                     }
+                }.padding(.bottom, 5)
+            }
+            
+            VStack {
+                VStack(alignment: .center) {
+                    HStack {
+                        Text("Battery")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .center)
+                    }
+                }.padding(.bottom, 5)
+                
+                VStack(alignment: .leading)  {
+                    HStack(spacing: 10) {
+                        Text("Current charge")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.getIORegData(param: "AppleRawCurrentCapacity") + " mAh")
+                            .foregroundColor(.gray)
+                    }
+                    HStack(spacing: 10) {
+                        Text("Full charge capacity")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.getIORegData(param: "AppleRawMaxCapacity") + " mAh")
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                    HStack(spacing: 10) {
+                        Text("Design capacity")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.getIORegData(param: "'\"DesignCapacity\" = '") + " mAh")
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                    HStack(spacing: 10) {
+                        Text("Cycle Count")
+                            .font(.headline)
+                            .frame(width: 150, alignment: .leading)
+                        Text(Process.getSysProfilerData(base: "SPPowerDataType", param: "'Cycle Count'"))
+                            .frame(width: 100, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
                 }
             }
         }
-        .frame(minWidth: 270, maxWidth: 270, minHeight: 480, maxHeight: 480, alignment:.top)
+        .frame(minWidth: 270, maxWidth: 270, minHeight: 580, maxHeight: 580, alignment:.top)
         .fixedSize()
         .background(VisualEffectView().ignoresSafeArea())
     }
